@@ -176,10 +176,7 @@ BigInt BigInt::sqrt() {
             right = mid - ONE;
         }
     }
-    //std::cout << left << ", " << right << ", " << res << "\n";
-    if (!(res * res == *this))
-        return res + ONE;
-    else return res;
+    return res;
 }
 
 BigInt BigInt::operator/(BigInt x) {

@@ -8,7 +8,7 @@ class SortedDoublyLinkedList {
 public:
     int size = 0;
 
-    SortedDoublyLinkedList() { headEntry = new entry<T>(); }
+    SortedDoublyLinkedList() { headEntry = new entry<T>(); finalEntry = new entry<T>(); }
 
     SortedDoublyLinkedList(entry<T>* root) { headEntry = root; }
 
@@ -33,9 +33,16 @@ public:
 
     int insert(entry<T> *value) {
         size++;
-        if (!headEntry->isInstantiated())
+        if (!headEntry->isInstantiated()) {
             headEntry = value;
-        else {
+            finalEntry = value;
+        }else {
+            if (*value->value > *finalEntry->value){
+                finalEntry->next = value;
+                value->previous = finalEntry;
+                finalEntry = value;
+                return size;
+            }
             entry<T> *currentEntry = headEntry;
             if (*headEntry->value > *value->value){
                 headEntry->previous = value;
@@ -56,6 +63,7 @@ public:
             }
             currentEntry->next = value;
             value->previous = currentEntry;
+            finalEntry = value;
             return i;
         }
         return 0;
@@ -72,6 +80,8 @@ public:
     }
 
     T getObject(T obj) {
+        if (!couldHaveObject(obj))
+            return T();
         entry<T>* currentEntry = headEntry;
         while (currentEntry != nullptr){
             if (*currentEntry->value == obj)
@@ -82,6 +92,8 @@ public:
     }
 
     T* getReference(T obj) {
+        if (!couldHaveObject(obj))
+            return new T();
         entry<T>* currentEntry = headEntry;
         while (currentEntry != nullptr && currentEntry->isInstantiated()){
             if (*currentEntry->value == obj)
@@ -91,8 +103,18 @@ public:
         return new T();
     }
 
-    bool hasObject(T obj) {
+    bool couldHaveObject(T obj) {
         if (!headEntry->isInstantiated())
+            return false;
+        if (finalEntry->isInstantiated() && obj > *finalEntry->value)
+            return false;
+        if (*headEntry->value > obj)
+            return false;
+        return true;
+    }
+
+    bool hasObject(T obj) {
+        if (!couldHaveObject(obj))
             return false;
         else {
             entry<T> *currentEntry = headEntry;
@@ -106,14 +128,14 @@ public:
     }
 
     T remove(T value) {
-        if (!headEntry->isInstantiated())
+        if (!couldHaveObject(value))
             return T();
         if (*headEntry->value == value) {
             if (headEntry->next != nullptr) {
                 headEntry = headEntry->next;
                 headEntry->previous = nullptr;
             } else
-                headEntry = new entry<T>();
+                headEntry = finalEntry = new entry<T>();
             size--;
             return value;
         } else {
@@ -130,6 +152,8 @@ public:
     }
 
     SortedDoublyLinkedList<T> subset(T max) {
+        if (!couldHaveObject(max))
+            return SortedDoublyLinkedList<T>();
         SortedDoublyLinkedList<T> out;
         entry<T> *currentEntry = headEntry;
         while (currentEntry != nullptr && currentEntry->isInstantiated() && *currentEntry->value <= max) {
@@ -178,6 +202,8 @@ public:
             entry->previous->next = entry->next;
         if (entry->next != nullptr)
             entry->next->previous = entry->previous;
+        else
+            finalEntry = entry->previous;
     }
 
     void join(SortedDoublyLinkedList<T> list) {
@@ -192,6 +218,7 @@ public:
 
 private:
     entry<T>* headEntry;
+    entry<T>* finalEntry;
 };
 
 #endif

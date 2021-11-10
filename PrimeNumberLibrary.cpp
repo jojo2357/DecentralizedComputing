@@ -1,24 +1,24 @@
 #include "stdafx.h"
 
 
-SortedDoublyLinkedList<BigInt> PrimeNumberLibrary::calculatePrime(BigInt numIn) {
-    SortedDoublyLinkedList<BigInt> out;
+void PrimeNumberLibrary::calculatePrime(BigInt numIn) {
 #ifdef DEBUG_PRINTS
     if (numIn == BigInt(11)){
         std::cout << "";
     }
     if (primes.hasObject(numIn)) {
         std::cout << "Thats a duplicate\n";
-        return out;
+        return;
     } else if (!candidatePrimes.hasObject(numIn)) {
         std::cout << "Thats not a candidate\n";
-        return out;
+        return;
     }
 #else
         if (primes.hasObject(numIn) || !candidatePrimes.hasObject(numIn))
-            return out;
+            return;
 #endif
     else {
+        SortedDoublyLinkedList<BigInt> out;
         BigInt sqrt = numIn.sqrt();
 #ifdef DEBUG_PRINTS
         std::cout << "Testing " << numIn << " (" << sqrt << "): ";
@@ -45,7 +45,7 @@ SortedDoublyLinkedList<BigInt> PrimeNumberLibrary::calculatePrime(BigInt numIn) 
                 if (numIn == BigInt(25)) {
                     std::cout << "";
                 }
-                return SortedDoublyLinkedList<BigInt>();
+                return;
             } else {
                 out.remove(*num.value);
                 uncheckedPossiblePrimes.remove(*num.value);
@@ -57,14 +57,14 @@ SortedDoublyLinkedList<BigInt> PrimeNumberLibrary::calculatePrime(BigInt numIn) 
             candidatePrimes.remove(numIn);
             primes.insert(new entry<BigInt>(&numIn));
             std::cout << "prime!\n";
-            return out;
+            return;
         }
+        std::cout << "pending " << out << "\n";
+        return;
     }
-    std::cout << "pending " << out << "\n";
-    return out;
 }
 
-SortedDoublyLinkedList<BigInt>
+void
 PrimeNumberLibrary::calculatePrime(BigInt numIn, SortedDoublyLinkedList<BigInt> calcsToDo) {
     BigInt sqrt = numIn.sqrt();
     SortedDoublyLinkedList<BigInt> uncheckedPossiblePrimes = candidatePrimes.subset(sqrt);
@@ -151,7 +151,7 @@ PrimeNumberLibrary::calculatePrime(BigInt numIn, SortedDoublyLinkedList<BigInt> 
                 std::cout << "";
             }
 #endif
-            return SortedDoublyLinkedList<BigInt>();
+            return;
         } else {
             calcsToDo.remove(*num.value);
             reportFinishingCalc(numIn, *num.value);
@@ -180,13 +180,13 @@ PrimeNumberLibrary::calculatePrime(BigInt numIn, SortedDoublyLinkedList<BigInt> 
 #ifdef DEBUG_PRINTS
         std::cout << "pending " << calcsToDo << "\n";
 #endif
-        return calcsToDo;
+        return;
     } else {
         addPrime(numIn);
 #ifdef DEBUG_PRINTS
         std::cout << "prime!\n";
 #endif
-        return calcsToDo;
+        return;
     }
 }
 

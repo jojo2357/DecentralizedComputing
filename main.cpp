@@ -38,6 +38,15 @@ int main() {
     gettimeofday(&time_end, nullptr);
     time_t msecs_time_end = (time_end.tv_sec * 1000) + (time_end.tv_usec / 1000);
 
-    std::cout << "Time: " << (msecs_time_end - msecs_time) << "\n";
+    std::cout << "Time: " << (msecs_time_end - msecs_time) << "ms\n";
+    //we dont count this in the time because we are simply verifying that the primes are correct
+    {
+        BigInt sum = BigInt(0);
+
+        for (entry<BigInt> prime : pnl.primes)
+            sum = sum + *prime.value;
+
+        std::cout << "Prime sum: " << sum << std::endl;
+    }
     return 0;
 }

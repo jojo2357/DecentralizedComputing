@@ -25,8 +25,8 @@ public:
         newlyPrimed.insert(new entry<BigInt>(new BigInt(prime)));
     }
 
-    SortedDoublyLinkedList<BigInt> calculatePrime(BigInt numIn);
-    SortedDoublyLinkedList<BigInt> calculatePrime(BigInt numIn, SortedDoublyLinkedList<BigInt> calcsToDo);
+    void calculatePrime(BigInt numIn);
+    void calculatePrime(BigInt numIn, SortedDoublyLinkedList<BigInt> calcsToDo);
     SortedDoublyLinkedList<BigInt> candidatePrimes;
     SortedDoublyLinkedList<BigInt> primes;
     SortedDoublyLinkedList<BigInt> newlyPrimed;
